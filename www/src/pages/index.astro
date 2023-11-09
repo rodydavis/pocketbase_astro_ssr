@@ -1,0 +1,24 @@
+---
+import Root from "../layouts/Root.astro";
+
+import PocketBase from "pocketbase";
+
+const pb = new PocketBase("http://127.0.0.1:8090");
+
+const items = pb.collection("items");
+
+const records = await items.getFullList();
+---
+
+<Root title="Items">
+  <h1>Items</h1>
+  <ul>
+    {
+      records.map((record) => (
+        <li>
+          <a href={`/items/${record.id}`}>{record.title}</a>
+        </li>
+      ))
+    }
+  </ul>
+</Root>

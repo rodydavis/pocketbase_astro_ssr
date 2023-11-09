@@ -1,0 +1,29 @@
+---
+import Root from "../layouts/Root.astro";
+
+import PocketBase from "pocketbase";
+
+const pb = new PocketBase("http://127.0.0.1:8090");
+
+const items = pb.collection("items");
+
+const slug = Astro.params.slug!;
+const id = slug.split("/").pop()!;
+
+const records = await items.getList(1, 1, {
+  filter: `id = '${id}'`,
+});
+
+if (records.items.length === 0) {
+  return new Response("Not found", { status: 404 });
+}
+
+const record = records.items[0];
+
+const title = record.title;
+---
+
+<Root {title}>
+  <a href="/">Back</a>
+  <h1>{title}</h1>
+</Root>
